@@ -1,17 +1,15 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 const EASE_CINEMA = [0.22, 1, 0.36, 1] as const;
 
 export function Contact() {
-  const ref = useRef<HTMLElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-10%' });
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <section id="contact" ref={ref} aria-label="Contact">
+    <section id="contact" aria-label="Contact">
       {/* Contact band — white with dot pattern, Digitalists teaser-contact */}
       <div
         className="bg-pattern"
@@ -32,7 +30,8 @@ export function Contact() {
             {/* Left */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : false}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.8, ease: EASE_CINEMA }}
             >
               <h2
@@ -99,7 +98,8 @@ export function Contact() {
             {/* Right — form */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : false}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
               transition={{ duration: 0.8, delay: 0.15, ease: EASE_CINEMA }}
             >
               {submitted ? (
