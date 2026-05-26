@@ -32,7 +32,7 @@ export function Contact() {
             {/* Left */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={isInView ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.8, ease: EASE_CINEMA }}
             >
               <h2
@@ -99,7 +99,7 @@ export function Contact() {
             {/* Right — form */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              animate={isInView ? { opacity: 1, y: 0 } : false}
               transition={{ duration: 0.8, delay: 0.15, ease: EASE_CINEMA }}
             >
               {submitted ? (
