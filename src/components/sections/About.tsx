@@ -2,9 +2,8 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { SectionLabel } from '@/components/ui/SectionLabel';
-import { TextReveal } from '@/components/ui/TextReveal';
-import { EASE_OUT_EXPO, fadeUp, staggerContainer } from '@/lib/motion';
+
+const EASE_CINEMA = [0.22, 1, 0.36, 1] as const;
 
 export function About() {
   const ref = useRef<HTMLElement>(null);
@@ -14,91 +13,135 @@ export function About() {
     <section
       id="about"
       ref={ref}
-      className="section-spacing relative"
-      aria-label="About section"
+      className="relative section-spacing bg-pattern"
+      style={{ backgroundColor: '#fff' }}
+      aria-label="About"
     >
       <div className="container-main">
-        <SectionLabel prefix="02" label="MINDSET" />
-
-        <div className="grid grid-cols-1 lg:grid-cols-[3fr_7fr] gap-12 lg:gap-24">
-          {/* Left column: Mono caption */}
+        <div className="flex items-center gap-4 mb-12">
           <motion.div
-            className="text-mono-label lg:pt-3"
-            style={{ color: 'hsl(55, 13%, 40%)' }}
+            className="text-eyebrow"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.3, duration: 0.4, ease: EASE_OUT_EXPO }}
+            transition={{ duration: 0.5 }}
           >
-            OP_02 // AGENT_MINDSET
+            About
           </motion.div>
+          {/* Yellow dot accent — Digitalists */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={isInView ? { scaleX: 1, opacity: 1 } : {}}
+            transition={{ duration: 0.7, delay: 0.2, ease: EASE_CINEMA }}
+            style={{
+              height: '1px',
+              flex: 1,
+              maxWidth: '80px',
+              backgroundColor: 'var(--color-accent)',
+              transformOrigin: 'left',
+            }}
+          />
+        </div>
 
-          {/* Right column: Narrative */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-16 lg:gap-24 items-start">
+          {/* Left */}
           <div>
-            {/* The Thesis */}
-            <div className="mb-16">
-              <TextReveal
-                text="I build systems that learn, adapt, and make decisions in environments designed to break them."
-                className="text-section-heading mb-10 max-w-4xl"
-                tag="h2"
-                delay={0.4}
-                splitBy="word"
-              />
-            </div>
-
-            {/* The Craft */}
-            <motion.div
-              className="space-y-8 mb-16"
-              variants={staggerContainer}
-              initial="hidden"
-              animate={isInView ? 'visible' : 'hidden'}
+            <motion.h2
+              className="text-heading mb-10"
+              style={{ color: 'var(--text-primary)' }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.9, delay: 0.1, ease: EASE_CINEMA }}
             >
-              <motion.p
-                variants={fadeUp}
-                className="text-body max-w-[720px]"
-                style={{ color: 'hsl(55, 13%, 66%)' }}
-              >
-                My engineering philosophy is rooted in the belief that intelligence emerges from 
-                the intersection of mathematical rigor and iterative experimentation. Every model 
-                I train, every environment I design, and every system I deploy is built with the 
-                understanding that real-world complexity demands more than theoretical elegance.
-              </motion.p>
+              I build systems that learn, adapt, and decide in environments designed to break them.
+            </motion.h2>
 
-              <motion.p
-                variants={fadeUp}
-                className="text-body max-w-[720px]"
-                style={{ color: 'hsl(55, 13%, 66%)' }}
-              >
-                From custom reward functions that capture the nuance of human intent, to 
-                distributed training pipelines that process millions of environment steps per hour — 
-                I operate at the boundary between research prototypes and production-grade systems. 
-                The gap between a promising paper and a deployed agent is where I do my best work.
-              </motion.p>
+            {/* Counter — Digitalists style */}
+            <motion.div
+              className="flex gap-12 mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.4, ease: EASE_CINEMA }}
+            >
+              {[
+                { num: '6+', label: 'Projects' },
+                { num: '4', label: 'Papers' },
+                { num: '4×', label: 'Speedup' },
+              ].map((item) => (
+                <div key={item.label}>
+                  <div
+                    style={{
+                      fontFamily: 'Georgia, serif',
+                      fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                      fontWeight: 500,
+                      lineHeight: 1,
+                      color: 'var(--text-primary)',
+                      marginBottom: '0.25rem',
+                    }}
+                  >
+                    {item.num}
+                  </div>
+                  <div className="text-eyebrow">{item.label}</div>
+                </div>
+              ))}
             </motion.div>
+          </div>
 
-            {/* The Horizon — Pull quote */}
-            <motion.blockquote
-              className="relative pl-6 py-1 max-w-2xl"
+          {/* Right — body text */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3, ease: EASE_CINEMA }}
+          >
+            {/* Pull quote */}
+            <blockquote
               style={{
-                borderLeft: '1px solid hsla(56, 92%, 62%, 0.55)',
+                borderLeft: '3px solid var(--color-accent)',
+                paddingLeft: '1.5rem',
+                marginBottom: '2rem',
               }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.8, duration: 0.6, ease: EASE_OUT_EXPO }}
             >
               <p
-                className="text-body italic"
-                style={{ color: 'hsl(55, 13%, 78%)' }}
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: 'clamp(1.1rem, 1.6vw, 1.3rem)',
+                  fontStyle: 'italic',
+                  lineHeight: 1.5,
+                  color: 'var(--text-primary)',
+                }}
               >
-                &quot;The future belongs to systems that can reason under uncertainty, learn from 
-                sparse feedback, and adapt without human intervention. I&apos;m building that future, 
-                one policy gradient at a time.&quot;
+                "Intelligence emerges from the intersection of mathematical rigor and iterative experimentation."
               </p>
-            </motion.blockquote>
+            </blockquote>
 
-          </div>
+            <p className="text-body mb-5">
+              My engineering philosophy is rooted in the belief that real-world complexity demands
+              more than theoretical elegance. Every model I train, every environment I design, and
+              every system I deploy pushes against the limits of what's predictable.
+            </p>
+            <p className="text-body mb-8">
+              From custom reward functions that capture the nuance of human intent, to distributed
+              training pipelines that process millions of environment steps per hour — I operate at
+              the boundary between research prototypes and production-grade systems.
+            </p>
+
+            <div className="grid grid-cols-2 gap-6">
+              {[
+                { label: 'Specialization', value: 'Reinforcement Learning' },
+                { label: 'Focus', value: 'Autonomous Systems' },
+                { label: 'Approach', value: 'Research → Production' },
+                { label: 'Status', value: 'Open to opportunities' },
+              ].map((item) => (
+                <div key={item.label}>
+                  <div className="text-eyebrow mb-1">{item.label}</div>
+                  <div style={{ fontSize: '0.9375rem', fontWeight: 500, color: 'var(--text-primary)' }}>
+                    {item.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 }
-

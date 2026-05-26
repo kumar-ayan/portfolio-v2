@@ -37,7 +37,14 @@ export function TextReveal({
   return (
     <Tag ref={ref as React.Ref<HTMLHeadingElement & HTMLParagraphElement & HTMLDivElement>} className={cn('flex flex-wrap', className)}>
       {units.map((unit, i) => (
-        <span key={i} className="overflow-hidden inline-block">
+        <span
+          key={i}
+          className={cn(
+            "overflow-hidden inline-block",
+            splitBy === 'word' && i < units.length - 1 && "mr-[0.28em]",
+            splitBy === 'char' && unit === ' ' && "mr-[0.28em]"
+          )}
+        >
           <motion.span
             className="inline-block"
             initial={{ y: '105%' }}
@@ -48,8 +55,7 @@ export function TextReveal({
               ease: EASE_OUT_EXPO,
             }}
           >
-            {unit}
-            {splitBy === 'word' && i < units.length - 1 ? '\u00A0' : ''}
+            {splitBy === 'char' && unit === ' ' ? '\u00A0' : unit}
           </motion.span>
         </span>
       ))}

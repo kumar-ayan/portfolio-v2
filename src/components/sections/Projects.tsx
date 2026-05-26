@@ -2,40 +2,75 @@
 
 import { useRef, useState } from 'react';
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
-import { SectionLabel } from '@/components/ui/SectionLabel';
-import { EASE_OUT_EXPO, fadeUp, staggerContainer } from '@/lib/motion';
 import { projects, type Project } from '@/data/projects';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
+
+const EASE_CINEMA = [0.22, 1, 0.36, 1] as const;
+
+const PROJECT_IMAGES: Record<string, string> = {
+  'autonomous-navigation': '/api/images/proj-1',
+  'neural-architecture-search': '/api/images/proj-2',
+  'sim-to-real-transfer': '/api/images/proj-3',
+  'multi-agent-coordination': '/api/images/proj-1',
+  'quantized-inference': '/api/images/proj-2',
+  'adaptive-interface': '/api/images/proj-3',
+};
+
+// Pixel arrow — Digitalists reference list arrow
+function PixelArrow() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="53" height="14" fill="none" viewBox="0 0 106 14">
+      <path d="M0 0h2v2H0zM0 4h2v2H0zM0 8h2v2H0zM0 12h2v2H0z M4 0h2v2H4zM4 4h2v2H4zM4 8h2v2H4zM4 12h2v2H4z M28 0h2v2h-2zM28 4h2v2h-2zM28 8h2v2h-2zM28 12h2v2h-2z M32 0h2v2h-2zM32 4h2v2h-2zM32 8h2v2h-2zM32 12h2v2h-2z M45 0h2v2h-2zM45 4h2v2h-2zM45 8h2v2h-2zM45 12h2v2h-2z M49 0h2v2h-2zM49 4h2v2h-2zM49 8h2v2h-2zM49 12h2v2h-2z M53 0h2v2h-2zM53 4h2v2h-2zM53 8h2v2h-2zM53 12h2v2h-2z M57 0h2v2h-2zM57 4h2v2h-2zM57 8h2v2h-2zM57 12h2v2h-2z M85 0h2v2h-2zM85 4h2v2h-2zM85 8h2v2h-2zM85 12h2v2h-2z M104 0h2v2h-2zM104 4h2v2h-2zM104 8h2v2h-2zM104 12h2v2h-2z" fill="currentColor" />
+    </svg>
+  );
+}
 
 export function Projects() {
   const ref = useRef<HTMLElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-10%' });
-  const isMobile = useMediaQuery('(max-width: 1024px)');
+  const isInView = useInView(ref, { once: true, margin: '-8%' });
 
   return (
     <section
       id="projects"
       ref={ref}
-      className="section-spacing relative"
-      aria-label="Projects section"
+      className="relative section-spacing bg-pattern"
+      style={{ backgroundColor: '#f0f0f0' }}
+      aria-label="Projects"
     >
       <div className="container-main">
-        <SectionLabel prefix="05" label="VERIFIED_SYSTEMS" />
+        {/* Header */}
+        <div className="flex items-end justify-between mb-12 gap-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, ease: EASE_CINEMA }}
+          >
+            <div className="text-eyebrow mb-4">Work</div>
+            <h2 className="text-heading" style={{ color: 'var(--text-primary)' }}>
+              Selected Projects
+            </h2>
+          </motion.div>
+          <motion.span
+            className="text-eyebrow"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            {projects.length} total
+          </motion.span>
+        </div>
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-        >
+        {/* Project rows — Digitalists reference list */}
+        <div>
           {projects.map((project, i) => (
             <ProjectRow
               key={project.id}
               project={project}
               index={i}
-              isMobile={isMobile}
+              isInView={isInView}
+              imageSrc={PROJECT_IMAGES[project.id] || '/api/images/proj-1'}
             />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -44,136 +79,107 @@ export function Projects() {
 function ProjectRow({
   project,
   index,
-  isMobile,
+  isInView,
+  imageSrc,
 }: {
   project: Project;
   index: number;
-  isMobile: boolean;
+  isInView: boolean;
+  imageSrc: string;
 }) {
-  const rowRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-
+  const [hovered, setHovered] = (require('react') as typeof import('react')).useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const springConfig = { stiffness: 90, damping: 24, mass: 0.25 };
+  const springConfig = { stiffness: 130, damping: 22, mass: 0.3 };
   const x = useSpring(mouseX, springConfig);
   const y = useSpring(mouseY, springConfig);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (isMobile || !rowRef.current) return;
-    const rect = rowRef.current.getBoundingClientRect();
-    mouseX.set(e.clientX - rect.left - 160);
-    mouseY.set(e.clientY - rect.top - 90);
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    mouseX.set(e.clientX);
+    mouseY.set(e.clientY - 120);
   };
 
   return (
     <motion.div
-      ref={rowRef}
-      variants={fadeUp}
-      className="relative group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 16 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: index * 0.07, ease: EASE_CINEMA }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onMouseMove={handleMouseMove}
-      data-cursor="VIEW"
+      style={{
+        borderTop: '1px solid rgba(0,0,0,0.1)',
+        padding: '1.75rem 0',
+        position: 'relative',
+        cursor: 'default',
+      }}
     >
-      <div className="divider-dotted w-full" />
+      <div className="grid grid-cols-[60px_1fr_auto] md:grid-cols-[60px_1fr_120px_auto] gap-4 md:gap-8 items-center">
+        {/* Index */}
+        <span className="text-eyebrow">{String(index + 1).padStart(2, '0')}</span>
 
-      <div className="py-8 md:py-11 grid grid-cols-1 md:grid-cols-[90px_1fr_auto] gap-5 md:gap-10 md:items-start">
-        <span
-          className="text-mono-label shrink-0"
-          style={{ color: 'hsl(56, 92%, 62%)', fontSize: '10px' }}
-        >
-          [{project.caseNumber}]
-        </span>
-
+        {/* Title */}
         <div>
           <h3
-            className="text-subsection transition-colors duration-300"
             style={{
-              color: isHovered ? 'hsl(56, 92%, 62%)' : 'hsl(55, 13%, 84%)',
+              fontFamily: 'Georgia, serif',
+              fontSize: 'clamp(1.1rem, 2vw, 1.6rem)',
+              fontWeight: 500,
+              letterSpacing: '-0.015em',
+              color: hovered ? '#000' : 'var(--text-primary)',
+              transition: 'color 0.25s ease',
+              lineHeight: 1.2,
+              marginBottom: '0.25rem',
             }}
           >
             {project.title}
           </h3>
-          <p className="text-body mt-4 max-w-2xl" style={{ color: 'hsl(55, 13%, 56%)' }}>
-            {project.description}
+          <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
+            {project.subtitle}
           </p>
         </div>
 
-        <div className="flex flex-wrap md:flex-col gap-2 md:items-end shrink-0">
-          {project.technologies.slice(0, 4).map((tech) => (
-            <span
-              key={tech}
-              className="text-mono-label"
-              style={{
-                fontSize: '9px',
-                color: 'hsl(55, 13%, 52%)',
-              }}
+        {/* Year — desktop */}
+        <span className="text-label hidden md:block">{project.year}</span>
+
+        {/* Arrow */}
+        <div style={{ color: hovered ? 'var(--text-primary)' : 'var(--text-muted)', transition: 'color 0.25s ease' }}>
+          {project.github ? (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'inherit', textDecoration: 'none', display: 'flex' }}
+              aria-label={`View ${project.title}`}
             >
-              {tech.toUpperCase()}
-            </span>
-          ))}
-          <span
-            className="text-mono-label hidden md:block pt-3"
-            style={{ color: 'hsl(55, 13%, 36%)', fontSize: '10px' }}
-          >
-            {project.year}
-          </span>
+              <PixelArrow />
+            </a>
+          ) : (
+            <PixelArrow />
+          )}
         </div>
       </div>
 
-      {/* Floating preview panel (desktop only) */}
-      {!isMobile && isHovered && (
-        <motion.div
-          className="absolute z-10 pointer-events-none"
-          style={{
-            x,
-            y,
-            width: 340,
-            height: 190,
-          }}
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
-        >
-          <div
-            className="w-full h-full flex flex-col justify-end p-5 border"
-            style={{
-              backgroundColor: 'hsla(240, 6%, 6%, 0.96)',
-              borderColor: 'hsla(55, 13%, 84%, 0.12)',
-              boxShadow: '0 24px 70px rgba(0,0,0,0.38)',
-            }}
-          >
-            <div className="space-y-1">
-              <div
-                className="text-mono-label"
-                style={{ color: 'hsl(56, 92%, 62%)', fontSize: '8px' }}
-              >
-                [{project.caseNumber} {'//'} PREVIEW]
-              </div>
-              <p
-                className="text-xs line-clamp-2"
-                style={{ color: 'hsl(55, 13%, 70%)' }}
-              >
-                {project.description}
-              </p>
-              {project.metrics && (
-                <div className="flex gap-3 pt-1">
-                  {project.metrics.slice(0, 2).map((m) => (
-                    <div key={m.label} className="text-mono-label" style={{ fontSize: '7px', color: 'hsl(55, 13%, 50%)' }}>
-                      {m.label}: <span style={{ color: 'hsl(56, 92%, 62%)' }}>{m.value}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {index === projects.length - 1 && <div className="divider-dotted w-full" />}
+      {/* Hover image — follows cursor, Digitalists reference style */}
+      <motion.div
+        className="fixed pointer-events-none z-[500]"
+        style={{
+          x,
+          y,
+          width: 320,
+          height: 200,
+          opacity: hovered ? 1 : 0,
+          transition: 'opacity 0.35s ease',
+        }}
+      >
+        <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+          <img
+            src={imageSrc}
+            alt={project.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
-

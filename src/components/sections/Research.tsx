@@ -1,10 +1,25 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { SectionLabel } from '@/components/ui/SectionLabel';
-import { fadeUp, staggerContainer } from '@/lib/motion';
 import { research, type ResearchPaper } from '@/data/research';
+
+const EASE_CINEMA = [0.22, 1, 0.36, 1] as const;
+
+const STATUS_COLORS: Record<string, string> = {
+  published: '#2FB65D',
+  'in-progress': '#f1e500',
+  preprint: '#313131',
+};
+
+// Pixel arrow
+function PixelArrow() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="53" height="14" fill="none" viewBox="0 0 106 14">
+      <path d="M0 0h2v2H0zM0 4h2v2H0zM0 8h2v2H0zM0 12h2v2H0z M4 0h2v2H4zM4 4h2v2H4zM4 8h2v2H4zM4 12h2v2H4z M28 0h2v2h-2zM28 4h2v2h-2zM28 8h2v2h-2zM28 12h2v2h-2z M32 0h2v2h-2zM32 4h2v2h-2zM32 8h2v2h-2zM32 12h2v2h-2z M45 0h2v2h-2zM45 4h2v2h-2zM45 8h2v2h-2zM45 12h2v2h-2z M49 0h2v2h-2zM49 4h2v2h-2zM49 8h2v2h-2zM49 12h2v2h-2z M53 0h2v2h-2zM53 4h2v2h-2zM53 8h2v2h-2zM53 12h2v2h-2z M57 0h2v2h-2zM57 4h2v2h-2zM57 8h2v2h-2zM57 12h2v2h-2z M85 0h2v2h-2zM85 4h2v2h-2zM85 8h2v2h-2zM85 12h2v2h-2z M104 0h2v2h-2zM104 4h2v2h-2zM104 8h2v2h-2zM104 12h2v2h-2z" fill="currentColor" />
+    </svg>
+  );
+}
 
 export function Research() {
   const ref = useRef<HTMLElement>(null);
@@ -14,263 +29,83 @@ export function Research() {
     <section
       id="research"
       ref={ref}
-      className="section-spacing relative"
-      aria-label="Research section"
+      className="section-spacing relative bg-pattern"
+      style={{ backgroundColor: '#fff' }}
+      aria-label="Research"
     >
       <div className="container-main">
-        <SectionLabel prefix="06" label="RESEARCH_PLAYGROUND" />
+        <div className="flex items-center gap-4 mb-12">
+          <div className="text-eyebrow">Research</div>
+          <div style={{ height: '1px', flex: 1, maxWidth: '80px', backgroundColor: 'var(--color-accent)' }} />
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[4fr_6fr] gap-12 lg:gap-24">
-          {/* Left: Live loss canvas */}
-          <LossCanvas />
+        <motion.h2
+          className="text-heading mb-14"
+          style={{ color: 'var(--text-primary)' }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: EASE_CINEMA }}
+        >
+          Publications &<br />Active Research
+        </motion.h2>
 
-          {/* Right: Publications */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-          >
-            <div className="text-mono-label mb-8" style={{ color: 'hsl(56, 92%, 62%)', fontSize: '10px' }}>
-              [PUBLICATIONS // ACTIVE_RESEARCH]
-            </div>
-
-            {research.map((paper) => (
-              <PaperRow key={paper.id} paper={paper} />
-            ))}
-          </motion.div>
+        <div>
+          {research.map((paper, i) => (
+            <motion.div
+              key={paper.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: i * 0.09, ease: EASE_CINEMA }}
+              style={{
+                borderTop: '1px solid rgba(0,0,0,0.1)',
+                padding: '1.75rem 0',
+                display: 'grid',
+                gridTemplateColumns: '1fr auto',
+                gap: '2rem',
+                alignItems: 'start',
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                  <div
+                    style={{
+                      width: '7px', height: '7px', borderRadius: '50%', flexShrink: 0, marginTop: '0.35rem',
+                      backgroundColor: STATUS_COLORS[paper.status] || '#313131',
+                    }}
+                  />
+                  <h4
+                    style={{
+                      fontFamily: 'Georgia, serif',
+                      fontSize: 'clamp(1rem, 1.4vw, 1.15rem)',
+                      fontWeight: 500,
+                      color: 'var(--text-primary)',
+                      lineHeight: 1.3,
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    {paper.title}
+                  </h4>
+                </div>
+                <p style={{ marginLeft: '1.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {paper.abstract}
+                </p>
+                <div style={{ marginLeft: '1.5rem', marginTop: '0.625rem', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                  {paper.venue && <span style={{ fontSize: '0.75rem', fontStyle: 'italic', color: 'var(--text-muted)' }}>{paper.venue}</span>}
+                  <span className="text-label">{paper.year}</span>
+                  {paper.citations !== undefined && <span className="text-label">{paper.citations} citations</span>}
+                </div>
+              </div>
+              <div style={{ paddingTop: '0.2rem' }}>
+                {paper.link && (
+                  <a href={paper.link} target="_blank" rel="noopener noreferrer" aria-label="Read paper" style={{ color: 'var(--text-muted)', transition: 'color 0.2s', textDecoration: 'none' }} onMouseEnter={e => (e.currentTarget.style.color = '#000')} onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}>
+                    <PixelArrow />
+                  </a>
+                )}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
-
-// Live Training Loss Canvas
-function LossCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(containerRef, { once: false });
-  const rafRef = useRef<number>(0);
-  const stepRef = useRef(0);
-  const dataRef = useRef<{ step: number; loss: number }[]>([]);
-
-  useEffect(() => {
-    if (!isInView || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const width = rect.width;
-    const height = rect.height;
-    const maxPoints = 100;
-
-    const animate = () => {
-      stepRef.current += 2;
-      const t = stepRef.current;
-
-      const loss = 2.5 * Math.exp(-0.008 * t) + 0.1 + (Math.random() - 0.5) * 0.15;
-      dataRef.current.push({ step: t, loss: Math.max(0.05, loss) });
-
-      if (dataRef.current.length > maxPoints) {
-        dataRef.current.shift();
-      }
-
-      ctx.fillStyle = 'hsl(240, 6%, 5%)';
-      ctx.fillRect(0, 0, width, height);
-
-      // Grid
-      ctx.strokeStyle = 'hsla(225, 7%, 24%, 0.18)';
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i < 5; i++) {
-        const gy = (height / 5) * i;
-        ctx.beginPath();
-        ctx.moveTo(0, gy);
-        ctx.lineTo(width, gy);
-        ctx.stroke();
-      }
-
-      // Loss curve
-      if (dataRef.current.length > 1) {
-        ctx.beginPath();
-        ctx.strokeStyle = 'hsla(56, 92%, 62%, 0.78)';
-        ctx.lineWidth = 1.5;
-        dataRef.current.forEach((point, i) => {
-          const px = (i / maxPoints) * width;
-          const py = height - (point.loss / 3) * height;
-          if (i === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        });
-        ctx.stroke();
-
-        // Glow
-        ctx.strokeStyle = 'hsla(56, 92%, 62%, 0.1)';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        dataRef.current.forEach((point, i) => {
-          const px = (i / maxPoints) * width;
-          const py = height - (point.loss / 3) * height;
-          if (i === 0) ctx.moveTo(px, py);
-          else ctx.lineTo(px, py);
-        });
-        ctx.stroke();
-      }
-
-      const lastPoint = dataRef.current[dataRef.current.length - 1];
-      if (lastPoint) {
-        const cx = width - 10;
-        const cy = height - (lastPoint.loss / 3) * height;
-        ctx.beginPath();
-        ctx.arc(cx, cy, 3, 0, Math.PI * 2);
-        ctx.fillStyle = 'hsla(56, 92%, 62%, 0.86)';
-        ctx.fill();
-      }
-
-      ctx.font = '10px monospace';
-      ctx.fillStyle = 'hsla(55, 13%, 60%, 0.8)';
-      ctx.fillText(`STEP: ${t}`, 8, 16);
-      ctx.fillText(`LOSS: ${lastPoint?.loss.toFixed(4) || '—'}`, 8, 28);
-      ctx.fillStyle = 'hsla(56, 92%, 62%, 0.45)';
-      ctx.fillText('TRAINING_ACTIVE', width - 110, 16);
-
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [isInView]);
-
-  return (
-    <div ref={containerRef}>
-      <div className="text-mono-label mb-4" style={{ color: 'hsl(56, 92%, 62%)', fontSize: '10px' }}>
-        [PANEL_01 // LIVE_TRAINING_LOSS]
-      </div>
-      <div
-        className="border relative overflow-hidden"
-        style={{
-          borderColor: 'hsla(225, 7%, 24%, 0.3)',
-          aspectRatio: '16/10',
-        }}
-      >
-        <canvas
-          ref={canvasRef}
-          className="w-full h-full"
-          style={{ display: 'block' }}
-        />
-      </div>
-    </div>
-  );
-}
-
-// Paper Row
-function PaperRow({ paper }: { paper: ResearchPaper }) {
-  return (
-    <motion.div
-      variants={fadeUp}
-      className="py-7 border-b group"
-      style={{ borderColor: 'hsla(225, 7%, 22%, 0.28)' }}
-    >
-      <div className="flex items-start gap-4">
-        {/* Status dot */}
-        <div className="pt-2 shrink-0">
-          <motion.div
-            className="w-2 h-2 rounded-full"
-            style={{
-              backgroundColor:
-                paper.status === 'published'
-                  ? '#34D399'
-                  : paper.status === 'in-progress'
-                    ? '#FBBF24'
-                    : '#60A5FA',
-            }}
-            animate={{ opacity: paper.status === 'in-progress' ? 0.78 : 0.68 }}
-          />
-        </div>
-
-        <div className="flex-1">
-          <div className="flex items-start justify-between gap-4">
-            <h4
-              className="font-serif text-base font-medium leading-tight"
-              style={{ color: 'hsl(55, 13%, 82%)' }}
-            >
-              {paper.title}
-            </h4>
-            {paper.link && (
-              <a
-                href={paper.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-mono-label shrink-0 transition-colors duration-200"
-                style={{ color: 'hsl(55, 13%, 50%)', fontSize: '10px' }}
-                data-cursor="OPEN"
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'hsl(56, 92%, 62%)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'hsl(55, 13%, 50%)')}
-              >
-                [ARXIV →]
-              </a>
-            )}
-          </div>
-
-          <p
-            className="text-xs mt-2 line-clamp-2"
-            style={{ color: 'hsl(55, 13%, 54%)', lineHeight: 1.65 }}
-          >
-            {paper.abstract}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 mt-3">
-            {paper.venue && (
-              <span className="text-mono-label" style={{ color: 'hsl(56, 92%, 62%)', fontSize: '9px' }}>
-                {paper.venue}
-              </span>
-            )}
-            <span className="text-mono-label" style={{ color: 'hsl(55, 13%, 40%)', fontSize: '9px' }}>
-              {paper.year}
-            </span>
-            {paper.citations !== undefined && (
-              <span className="text-mono-label" style={{ color: 'hsl(55, 13%, 40%)', fontSize: '9px' }}>
-                {paper.citations} citations
-              </span>
-            )}
-            <span
-              className="text-mono-label"
-              style={{
-                color:
-                  paper.status === 'published'
-                    ? '#34D399'
-                    : paper.status === 'in-progress'
-                      ? '#FBBF24'
-                      : '#60A5FA',
-                fontSize: '9px',
-              }}
-            >
-              [{paper.status.toUpperCase()}]
-            </span>
-          </div>
-
-          <div className="flex flex-wrap gap-2 mt-3">
-            {paper.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-mono-label"
-                style={{
-                  fontSize: '8px',
-                  color: 'hsl(55, 13%, 50%)',
-                }}
-              >
-                {tag.toUpperCase()}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-

@@ -2,128 +2,142 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { EASE_IN_OUT_EXPO } from '@/lib/motion';
 
 export function Preloader({ onComplete }: { onComplete: () => void }) {
   const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState<'boot' | 'loading' | 'exit'>('boot');
-  const [logs, setLogs] = useState<string[]>([]);
+  const [done, setDone] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const bootLogs = [
-      '[SYSTEM] Initializing neural runtime...',
-      '[CUDA] Detecting GPU devices...',
-      '[CUDA] NVIDIA A100 80GB — ACTIVE',
-      '[MODEL] Loading policy network weights...',
-      '[STATUS] All systems operational',
-    ];
-
-    // Boot phase: type out logs
-    let logIndex = 0;
-    const logInterval = setInterval(() => {
-      if (logIndex < bootLogs.length) {
-        setLogs((prev) => [...prev, bootLogs[logIndex]]);
-        logIndex++;
-      } else {
-        clearInterval(logInterval);
-        setPhase('loading');
-      }
-    }, 120);
-
-    return () => clearInterval(logInterval);
-  }, []);
-
-  useEffect(() => {
-    if (phase !== 'loading') return;
-
-    // Progress bar
     intervalRef.current = setInterval(() => {
       setProgress((prev) => {
-        if (prev >= 100) {
+        const next = prev + Math.random() * 20 + 8;
+        if (next >= 100) {
           if (intervalRef.current) clearInterval(intervalRef.current);
-          setPhase('exit');
-          setTimeout(onComplete, 600);
+          setTimeout(() => {
+            setDone(true);
+            setTimeout(onComplete, 600);
+          }, 200);
           return 100;
         }
-        return prev + Math.random() * 15 + 5;
+        return next;
       });
-    }, 80);
+    }, 60);
 
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [phase, onComplete]);
+  }, [onComplete]);
+
+  // Today's date — Digitalists style
+  const now = new Date();
+  const dateStr = `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${String(now.getFullYear()).slice(2)} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
 
   return (
     <AnimatePresence>
-      {phase !== 'exit' ? null : null}
-      <motion.div
-        className="fixed inset-0 z-[10000] flex flex-col justify-end"
-        style={{ backgroundColor: '#f1e500' }}
-        exit={{
-          y: '-100%',
-          transition: { duration: 0.6, ease: EASE_IN_OUT_EXPO },
-        }}
-        animate={phase === 'exit' ? { y: '-100%' } : { y: 0 }}
-        transition={{ duration: 0.6, ease: EASE_IN_OUT_EXPO }}
-      >
-        {/* Terminal log area */}
-        <div className="flex-1 flex flex-col justify-end p-6 md:p-8 overflow-hidden">
-          <div className="max-w-2xl">
-            {logs.map((log, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.15 }}
-                className="font-mono text-[11px] md:text-[13px] leading-relaxed"
-                style={{
-                  color: log.includes('[CUDA]') || log.includes('[STATUS]')
-                    ? '#080809'
-                    : 'rgba(8, 8, 9, 0.7)',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                {log}
-              </motion.div>
-            ))}
-
-            {/* Blinking cursor */}
-            <motion.span
-              className="inline-block w-2 h-4 mt-1"
-              style={{ backgroundColor: '#080809' }}
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.8, repeat: Infinity }}
-            />
+      {!done && (
+        <motion.div
+          className="fixed inset-0 z-[10000]"
+          style={{ backgroundColor: '#f1e500' }}
+          exit={{
+            y: '-100%',
+            transition: { duration: 0.7, ease: [0.85, 0, 0.15, 1] },
+          }}
+        >
+          {/* Top-right: location + date */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 28,
+              right: 28,
+              fontFamily: 'monospace',
+              fontSize: '0.6875rem',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: 'rgba(0,0,0,0.55)',
+            }}
+          >
+            {dateStr}
           </div>
-        </div>
 
-        {/* Progress bar */}
-        <div className="p-6 md:p-8">
-          {/* Dotted progress track */}
-          <div className="relative h-[2px] w-full mb-4">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage:
-                  'radial-gradient(circle, rgba(8, 8, 9, 0.3) 1px, transparent 1.5px)',
-                backgroundSize: '8px 8px',
-              }}
-            />
+          {/* Center — wordmark */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              textAlign: 'center',
+            }}
+          >
             <motion.div
-              className="absolute inset-y-0 left-0"
-              style={{ backgroundColor: '#080809' }}
-              animate={{ width: `${Math.min(progress, 100)}%` }}
-              transition={{ duration: 0.1 }}
-            />
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                fontFamily: 'Georgia, serif',
+                fontSize: 'clamp(2.5rem, 7vw, 5.5rem)',
+                fontWeight: 500,
+                letterSpacing: '-0.035em',
+                color: '#000',
+                lineHeight: 1,
+              }}
+            >
+              Ayan Tiwari
+            </motion.div>
           </div>
 
-          <div className="flex justify-between font-mono text-[10px] uppercase tracking-[0.2em]" style={{ color: 'rgba(8, 8, 9, 0.6)' }}>
-            <span>LATENT OPERATOR // BOOT SEQUENCE</span>
-            <span>{Math.min(Math.floor(progress), 100)}%</span>
+          {/* Bottom-right: percent + dot progress */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 28,
+              right: 28,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              gap: '0.5rem',
+            }}
+          >
+            <motion.div
+              style={{
+                fontFamily: 'monospace',
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                letterSpacing: '0.05em',
+                color: '#000',
+                textTransform: 'uppercase',
+              }}
+            >
+              {Math.floor(Math.min(progress, 100))}%
+            </motion.div>
+
+            {/* Dot progress bar — Digitalists signature */}
+            <svg width="200" height="15" viewBox="0 0 200 15" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="preloader-dots-inactive" patternUnits="userSpaceOnUse" width="4" height="4">
+                  <rect x="1" y="1" width="1.75" height="1.75" fill="#afa700" />
+                </pattern>
+                <pattern id="preloader-dots-active" patternUnits="userSpaceOnUse" width="4" height="4">
+                  <rect x="1" y="1" width="1.75" height="1.75" fill="#000" />
+                </pattern>
+              </defs>
+              <rect
+                x="0"
+                y="0"
+                width={Math.min(progress / 100 * 200, 200)}
+                height="15"
+                fill="url(#preloader-dots-active)"
+              />
+              <rect
+                x={Math.min(progress / 100 * 200, 200)}
+                y="0"
+                width={200 - Math.min(progress / 100 * 200, 200)}
+                height="15"
+                fill="url(#preloader-dots-inactive)"
+              />
+            </svg>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 }
-

@@ -2,50 +2,47 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SectionLabel } from '@/components/ui/SectionLabel';
-import { EASE_OUT_EXPO } from '@/lib/motion';
+
+const EASE_CINEMA = [0.22, 1, 0.36, 1] as const;
 
 const FOCUS_AREAS = [
   {
     id: 'rl',
-    tag: 'VECTOR_01',
+    index: '01',
     title: 'Reinforcement Learning',
     subtitle: 'Policy Optimization & Multi-Agent Systems',
     description:
       'Designing agents that learn optimal strategies through environmental interaction. Specializing in PPO, SAC, and custom policy gradient methods for continuous control tasks. Building multi-agent systems with emergent communication and cooperative strategies.',
-    equation: 'L^CLIP(θ) = E[min(r_t(θ)·A_t, clip(r_t(θ), 1-ε, 1+ε)·A_t)]',
     metrics: [
-      { label: 'ENVIRONMENTS', value: '12+' },
-      { label: 'AGENTS TRAINED', value: '200+' },
-      { label: 'STEPS/HR', value: '2.4M' },
+      { label: 'Environments', value: '12+' },
+      { label: 'Agents Trained', value: '200+' },
+      { label: 'Steps / Hour', value: '2.4M' },
     ],
   },
   {
     id: 'gen',
-    tag: 'VECTOR_02',
+    index: '02',
     title: 'Generative Architectures',
     subtitle: 'Attention Mechanisms & Latent Spaces',
     description:
       'Building and fine-tuning transformer architectures, diffusion models, and generative systems. Working with attention mechanisms, latent space manipulation, and conditional generation for both research and production applications.',
-    equation: 'Attention(Q,K,V) = softmax(QK^T / √d_k)·V',
     metrics: [
-      { label: 'MODELS BUILT', value: '15+' },
-      { label: 'PARAMETERS', value: '7B max' },
-      { label: 'ACCURACY', value: '98.1%' },
+      { label: 'Models Built', value: '15+' },
+      { label: 'Max Parameters', value: '7B' },
+      { label: 'Peak Accuracy', value: '98.1%' },
     ],
   },
   {
     id: 'sys',
-    tag: 'VECTOR_03',
+    index: '03',
     title: 'AI Systems & Deployment',
     subtitle: 'CUDA Optimization & Quantized Inference',
     description:
       'Building production AI infrastructure: custom CUDA kernels, Triton inference servers, FP8/INT4 quantization pipelines. Optimizing model serving for low-latency, high-throughput deployment on GPU clusters.',
-    equation: 'Throughput = BatchSize × (1 / Latency) × GPUs',
     metrics: [
-      { label: 'LATENCY', value: '<5ms' },
-      { label: 'THROUGHPUT', value: '4.2x' },
-      { label: 'GPU UTIL', value: '94%' },
+      { label: 'Latency', value: '<5ms' },
+      { label: 'Throughput Gain', value: '4.2×' },
+      { label: 'GPU Utilization', value: '94%' },
     ],
   },
 ];
@@ -60,158 +57,164 @@ export function Expertise() {
       ([entry]) => setIsInView(entry.isIntersecting),
       { threshold: 0.1 }
     );
-
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
     if (!isInView || !sectionRef.current) return;
-
     const handleScroll = () => {
       const section = sectionRef.current;
       if (!section) return;
-
       const rect = section.getBoundingClientRect();
-      const sectionHeight = section.offsetHeight;
-      const scrolledInSection = -rect.top;
-      const progress = Math.max(0, Math.min(1, scrolledInSection / (sectionHeight - window.innerHeight)));
-      const newIndex = Math.min(Math.floor(progress * FOCUS_AREAS.length), FOCUS_AREAS.length - 1);
-      setActiveIndex(newIndex);
+      const scrolled = -rect.top;
+      const progress = Math.max(
+        0,
+        Math.min(1, scrolled / (section.offsetHeight - window.innerHeight))
+      );
+      setActiveIndex(
+        Math.min(Math.floor(progress * FOCUS_AREAS.length), FOCUS_AREAS.length - 1)
+      );
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isInView]);
 
-  const activeArea = FOCUS_AREAS[activeIndex];
+  const active = FOCUS_AREAS[activeIndex];
 
   return (
     <section
       id="expertise"
       ref={sectionRef}
-      className="relative"
-      style={{ minHeight: `320vh` }}
-      aria-label="Expertise section"
+      className="relative bg-pattern"
+      style={{ minHeight: '300vh', backgroundColor: '#f0f0f0' }}
+      aria-label="Expertise"
     >
-      <div className="sticky top-0 h-screen flex flex-col">
-        <div className="container-main pt-24 md:pt-28">
-          <SectionLabel prefix="03" label="FOCUS_AREAS" />
+      <div className="sticky top-0 h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#f0f0f0' }}>
+        {/* Top label */}
+        <div className="container-main pt-24 pb-8">
+          <div className="flex items-center gap-4"><div className="text-eyebrow">Expertise</div><div style={{ height: '1px', flex: 1, maxWidth: '80px', backgroundColor: '#f1e500' }} /></div>
         </div>
 
-        <div className="container-main flex-1 grid grid-cols-1 lg:grid-cols-[4fr_6fr] gap-12 lg:gap-28 items-center pb-24">
-          {/* Left: Telemetry panel */}
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeArea.id}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.62, ease: EASE_OUT_EXPO }}
-                className="space-y-8"
+        {/* Main grid */}
+        <div className="container-main flex-1 grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-12 lg:gap-24 items-center pb-16">
+          {/* Left — tabbed navigation */}
+          <div className="space-y-0">
+            {FOCUS_AREAS.map((area, i) => (
+              <button
+                key={area.id}
+                onClick={() => setActiveIndex(i)}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '1.5rem 0',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: '1px solid var(--border-subtle)',
+                  cursor: 'pointer',
+                  transition: 'opacity 0.3s ease',
+                  opacity: i === activeIndex ? 1 : 0.35,
+                }}
               >
-                {/* Equation display */}
                 <div
-                  className="py-8 border-y"
                   style={{
-                    borderColor: 'hsla(225, 7%, 24%, 0.35)',
-                    backgroundColor: 'transparent',
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    gap: '1rem',
                   }}
                 >
-                  <div className="text-mono-label mb-4" style={{ color: 'hsl(56, 92%, 62%)', fontSize: '9px' }}>
-                    [{activeArea.tag} {'//'} CORE_EQUATION]
-                  </div>
-                  <div
-                    className="font-serif text-lg md:text-2xl py-2"
-                    style={{ color: 'hsl(55, 13%, 82%)', fontStyle: 'italic', lineHeight: 1.35 }}
+                  <span className="text-eyebrow" style={{ minWidth: '2rem' }}>
+                    {area.index}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: 'Georgia, serif',
+                      fontSize: 'clamp(1.2rem, 2vw, 1.6rem)',
+                      fontWeight: 500,
+                      letterSpacing: '-0.01em',
+                      color:
+                        i === activeIndex
+                          ? '#000000'
+                          : '#666666',
+                      transition: 'color 0.3s ease',
+                    }}
                   >
-                    {activeArea.equation}
-                  </div>
+                    {area.title}
+                  </span>
                 </div>
+              </button>
+            ))}
 
-                {/* Metrics grid */}
-                <div className="grid grid-cols-3 gap-6">
-                  {activeArea.metrics.map((metric) => (
-                    <div
-                      key={metric.label}
-                      className="text-left"
-                    >
-                      <div
-                        className="font-serif text-xl md:text-3xl font-medium mb-2"
-                        style={{ color: 'hsl(56, 92%, 62%)' }}
-                      >
-                        {metric.value}
-                      </div>
-                      <div
-                        className="text-mono-label"
-                        style={{ color: 'hsl(55, 13%, 40%)', fontSize: '8px' }}
-                      >
-                        {metric.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Progress indicators */}
-                <div className="flex gap-2">
-                  {FOCUS_AREAS.map((_, i) => (
-                    <div
-                      key={i}
-                      className="h-[1px] flex-1 transition-all duration-500"
-                      style={{
-                        backgroundColor:
-                          i === activeIndex
-                            ? 'hsl(56, 92%, 62%)'
-                            : 'hsla(225, 7%, 12%, 0.5)',
-                      }}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
+            {/* Progress dots */}
+            <div className="flex gap-2 pt-6">
+              {FOCUS_AREAS.map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    height: '2px',
+                    flex: 1,
+                    backgroundColor:
+                      i === activeIndex
+                        ? 'var(--color-accent)'
+                        : 'var(--border-subtle)',
+                    transition: 'background-color 0.4s ease',
+                  }}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Right: Scrolling research description */}
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeArea.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.62, ease: EASE_OUT_EXPO }}
+          {/* Right — detail panel */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active.id}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -24 }}
+              transition={{ duration: 0.55, ease: EASE_CINEMA }}
+            >
+              <div className="text-eyebrow mb-4" style={{ color: 'var(--color-accent)' }}>
+                {active.subtitle}
+              </div>
+
+              <h3
+                className="text-heading mb-6"
+                style={{ color: 'var(--text-primary)' }}
               >
-                <div className="text-mono-label mb-4" style={{ color: 'hsl(56, 92%, 62%)', fontSize: '10px' }}>
-                  [{activeArea.tag}]
-                </div>
+                {active.title}
+              </h3>
 
-                <h3
-                  className="text-section-heading mb-5"
-                  style={{ color: 'hsl(55, 13%, 84%)' }}
-                >
-                  {activeArea.title}
-                </h3>
+              <p className="text-body mb-10" style={{ maxWidth: '480px' }}>
+                {active.description}
+              </p>
 
-                <p
-                  className="text-mono-label mb-8"
-                  style={{ color: 'hsl(56, 92%, 62%)', fontSize: '11px' }}
-                >
-                  {activeArea.subtitle}
-                </p>
-
-                <p
-                  className="text-body max-w-xl"
-                  style={{ color: 'hsl(55, 13%, 66%)', lineHeight: 1.75 }}
-                >
-                  {activeArea.description}
-                </p>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+              {/* Metrics */}
+              <div className="grid grid-cols-3 gap-6">
+                {active.metrics.map((m) => (
+                  <div key={m.label}>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)',
+                        fontWeight: 400,
+                        color: 'var(--text-primary)',
+                        lineHeight: 1,
+                        marginBottom: '0.375rem',
+                      }}
+                    >
+                      {m.value}
+                    </div>
+                    <div className="text-eyebrow" style={{ fontSize: '0.625rem' }}>
+                      {m.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
   );
 }
-
