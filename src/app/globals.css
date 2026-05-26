@@ -1,26 +1,31 @@
 @import "tailwindcss";
 
 /* ========================================
-   AYAN TIWARI — Cinematic Editorial Design System
+   AYAN KUMAR — Cinematic Editorial Design System
    Inspired by digitalists.at
    Light-primary, bold typography, yellow accent
    ======================================== */
 
 :root {
   /* === Color System: Light editorial === */
-  --bg-canvas: #f0f0f0;          /* light warm gray — Digitalists gray-10 */
+  --bg-canvas: #f0f0f0;
+  /* light warm gray — Digitalists gray-10 */
   --bg-white: #ffffff;
   --bg-surface: #e8e8e8;
-  --bg-dark: #212121;            /* Digitalists gray-50 */
+  --bg-dark: #212121;
+  /* Digitalists gray-50 */
   --bg-darker: #141414;
-  --border-subtle: rgba(0,0,0,0.08);
-  --border-mid: rgba(0,0,0,0.14);
-  --text-primary: #212121;       /* Digitalists gray-50 — pure dark */
-  --text-secondary: #6d6d6d;     /* Digitalists gray-30 */
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-mid: rgba(0, 0, 0, 0.14);
+  --text-primary: #212121;
+  /* Digitalists gray-50 — pure dark */
+  --text-secondary: #6d6d6d;
+  /* Digitalists gray-30 */
   --text-muted: #b0b0b0;
   --text-on-dark: #f0f0f0;
-  --text-on-dark-muted: rgba(240,240,240,0.5);
-  --color-accent: #f1e500;       /* EXACT Digitalists yellow */
+  --text-on-dark-muted: rgba(240, 240, 240, 0.5);
+  --color-accent: #f1e500;
+  /* EXACT Digitalists yellow */
   --color-accent-dark: #afa700;
   --color-accent-rgb: 241, 229, 0;
 
@@ -41,7 +46,7 @@
 }
 
 /* === Tailwind Theme === */
-@theme inline {
+d inline {
   --color-background: var(--bg-canvas);
   --color-accent: var(--color-accent);
   --font-sans: var(--font-sans-family), ui-sans-serif, system-ui, sans-serif;
@@ -53,30 +58,60 @@
    Reset & Base
    ======================================== */
 
-*,*::before,*::after { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { overflow-x: hidden; max-width: 100vw; }
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: auto;
 }
+
 body {
   background-color: var(--bg-canvas);
   color: var(--text-primary);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   line-height: 1.5;
 }
-::selection { background-color: var(--color-accent); color: var(--bg-dark); }
-img { display: block; max-width: 100%; }
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--bg-dark);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
 
 /* ========================================
    Scrollbar
    ======================================== */
 
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
 
 /* ========================================
    Typography System
@@ -201,11 +236,17 @@ img { display: block; max-width: 100%; }
   position: relative;
   overflow: hidden;
 }
+
 .cinematic-frame img {
-  width: 100%; height: 100%; object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform 1.1s var(--ease-cinema);
 }
-.cinematic-frame:hover img { transform: scale(1.04); }
+
+.cinematic-frame:hover img {
+  transform: scale(1.04);
+}
 
 /* ========================================
    Buttons
@@ -227,7 +268,10 @@ img { display: block; max-width: 100%; }
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
-.btn-primary:hover { opacity: 0.88; }
+
+.btn-primary:hover {
+  opacity: 0.88;
+}
 
 .btn-ghost {
   display: inline-flex;
@@ -245,7 +289,12 @@ img { display: block; max-width: 100%; }
   cursor: pointer;
   transition: border-color 0.25s ease, background 0.25s ease;
 }
-.btn-ghost:hover { border-color: var(--color-accent); background: var(--color-accent); color: var(--bg-dark); }
+
+.btn-ghost:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--bg-dark);
+}
 
 .btn-ghost-dark {
   display: inline-flex;
@@ -259,11 +308,16 @@ img { display: block; max-width: 100%; }
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
 }
-.btn-ghost-dark:hover { border-color: var(--color-accent); background: var(--color-accent); color: var(--bg-dark); }
+
+.btn-ghost-dark:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--bg-dark);
+}
 
 /* Link with arrow */
 .link-cta {
@@ -277,7 +331,10 @@ img { display: block; max-width: 100%; }
   text-decoration: none;
   transition: gap 0.25s ease;
 }
-.link-cta:hover { gap: 0.875rem; }
+
+.link-cta:hover {
+  gap: 0.875rem;
+}
 
 .link-cta-dark {
   display: inline-flex;
@@ -290,7 +347,11 @@ img { display: block; max-width: 100%; }
   text-decoration: none;
   transition: gap 0.25s ease, color 0.25s ease;
 }
-.link-cta-dark:hover { gap: 0.875rem; color: var(--color-accent); }
+
+.link-cta-dark:hover {
+  gap: 0.875rem;
+  color: var(--color-accent);
+}
 
 /* Stacked content CTA — Digitalists */
 .stacked-cta {
@@ -307,7 +368,10 @@ img { display: block; max-width: 100%; }
   text-decoration: none;
   transition: gap 0.25s ease;
 }
-.stacked-cta:hover { gap: 1rem; }
+
+.stacked-cta:hover {
+  gap: 1rem;
+}
 
 /* ========================================
    Form
@@ -325,8 +389,14 @@ img { display: block; max-width: 100%; }
   outline: none;
   transition: border-color 0.3s ease;
 }
-.form-input::placeholder { color: var(--text-muted); }
-.form-input:focus { border-color: var(--bg-dark); }
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input:focus {
+  border-color: var(--bg-dark);
+}
 
 .form-label {
   display: block;
@@ -366,8 +436,16 @@ img { display: block; max-width: 100%; }
   opacity: 0;
   transition: opacity 0.35s ease;
 }
-.hover-img.visible { opacity: 1; }
-.hover-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.hover-img.visible {
+  opacity: 1;
+}
+
+.hover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 /* ========================================
    Grain — very subtle
@@ -388,27 +466,50 @@ img { display: block; max-width: 100%; }
    Accessibility
    ======================================== */
 
-:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
 
 .skip-to-content {
-  position: absolute; top: -100%; left: 50%; transform: translateX(-50%);
-  padding: 0.75rem 1.5rem; background: var(--color-accent); color: var(--bg-dark);
-  font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
-  z-index: 10000; transition: top 0.2s;
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  background: var(--color-accent);
+  color: var(--bg-dark);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  z-index: 10000;
+  transition: top 0.2s;
 }
-.skip-to-content:focus { top: 1rem; }
+
+.skip-to-content:focus {
+  top: 1rem;
+}
 
 /* ========================================
    Mobile
    ======================================== */
 
 @media (max-width: 768px) {
-  .section-spacing { padding-top: 4rem; padding-bottom: 4rem; }
-  .text-display { font-size: clamp(3.5rem, 16vw, 6rem); }
+  .section-spacing {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .text-display {
+    font-size: clamp(3.5rem, 16vw, 6rem);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,*::before,*::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }

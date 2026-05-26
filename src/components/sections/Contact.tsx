@@ -156,7 +156,7 @@ export function Contact() {
           }}
         >
           <span style={{ fontSize: '0.75rem', color: 'rgba(240,240,240,0.4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            © 2025 Ayan Tiwari
+            © 2025 Ayan Kumar
           </span>
           {/* Pixel art signature — Digitalists footer bottom */}
           <svg xmlns="http://www.w3.org/2000/svg" width="106" height="14" fill="none" viewBox="0 0 106 14" style={{ opacity: 0.3 }}>

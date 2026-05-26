@@ -81,7 +81,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
                 lineHeight: 1,
               }}
             >
-              Ayan Tiwari
+              Ayan Kumar
             </motion.div>
           </div>
 

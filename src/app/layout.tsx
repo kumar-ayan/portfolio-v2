@@ -32,9 +32,9 @@ const jetbrainsMono = JetBrains_Mono({
 // ========================================
 
 export const metadata: Metadata = {
-  title: 'Ayan Tiwari — AI/ML Engineer | Reinforcement Learning & Intelligent Systems',
+  title: 'Ayan Kumar — AI/ML Engineer | Reinforcement Learning & Intelligent Systems',
   description:
-    'Portfolio of Ayan Tiwari — AI/ML Engineer specializing in Reinforcement Learning, Deep Learning, and Autonomous Systems. Building intelligent systems at the intersection of research and production.',
+    'Portfolio of Ayan Kumar — AI/ML Engineer specializing in Reinforcement Learning, Deep Learning, and Autonomous Systems. Building intelligent systems at the intersection of research and production.',
   keywords: [
     'AI Engineer',
     'Machine Learning',
@@ -44,9 +44,9 @@ export const metadata: Metadata = {
     'Autonomous Systems',
     'AI Portfolio',
   ],
-  authors: [{ name: 'Ayan Tiwari' }],
+  authors: [{ name: 'Ayan Kumar' }],
   openGraph: {
-    title: 'Ayan Tiwari — AI/ML Engineer',
+    title: 'Ayan Kumar — AI/ML Engineer',
     description:
       'Building intelligent systems at the intersection of research and production.',
     type: 'website',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ayan Tiwari — AI/ML Engineer',
+    title: 'Ayan Kumar — AI/ML Engineer',
     description:
       'Building intelligent systems at the intersection of research and production.',
   },
