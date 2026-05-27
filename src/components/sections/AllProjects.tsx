@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { projects, type Project } from '@/data/projects';
 import Link from 'next/link';
@@ -74,11 +74,12 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       ref={ref}
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, ease: EASE_CINEMA }}
+      transition={{ duration: 0.8, delay: index * 0.1, ease: EASE_CINEMA }}
       className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start"
     >
       {/* Visual / Image */}
       <div className="lg:col-span-7 relative group overflow-hidden" style={{ borderRadius: '4px', backgroundColor: '#e0e0e0', aspectRatio: '16/10' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={getImage(project)}
           alt={project.title}

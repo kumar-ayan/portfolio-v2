@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
 import { projects, type Project } from '@/data/projects';
+import Link from 'next/link';
 
 const EASE_CINEMA = [0.22, 1, 0.36, 1] as const;
 
@@ -79,7 +80,7 @@ export function Projects() {
           transition={{ duration: 0.6, delay: 0.4, ease: EASE_CINEMA }}
           className="mt-16 flex justify-center"
         >
-          <a
+          <Link
             href="/projects"
             style={{
               display: 'inline-flex',
@@ -101,7 +102,7 @@ export function Projects() {
           >
             View All Projects
             <PixelArrow />
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>
