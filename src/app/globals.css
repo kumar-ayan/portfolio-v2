@@ -46,7 +46,7 @@
 }
 
 /* === Tailwind Theme === */
-d inline {
+@theme inline {
   --color-background: var(--bg-canvas);
   --color-accent: var(--color-accent);
   --font-sans: var(--font-sans-family), ui-sans-serif, system-ui, sans-serif;
