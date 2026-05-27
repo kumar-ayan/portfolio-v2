@@ -61,24 +61,7 @@ export function Expertise() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!isInView || !sectionRef.current) return;
-    const handleScroll = () => {
-      const section = sectionRef.current;
-      if (!section) return;
-      const rect = section.getBoundingClientRect();
-      const scrolled = -rect.top;
-      const progress = Math.max(
-        0,
-        Math.min(1, scrolled / (section.offsetHeight - window.innerHeight))
-      );
-      setActiveIndex(
-        Math.min(Math.floor(progress * FOCUS_AREAS.length), FOCUS_AREAS.length - 1)
-      );
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isInView]);
+
 
   const active = FOCUS_AREAS[activeIndex];
 
@@ -86,13 +69,13 @@ export function Expertise() {
     <section
       id="expertise"
       ref={sectionRef}
-      className="relative bg-pattern"
-      style={{ minHeight: '300vh', backgroundColor: '#f0f0f0' }}
+      className="section-spacing relative bg-pattern"
+      style={{ backgroundColor: '#f0f0f0' }}
       aria-label="Expertise"
     >
-      <div className="sticky top-0 h-screen flex flex-col overflow-hidden" style={{ backgroundColor: '#f0f0f0' }}>
+      <div className="flex flex-col overflow-hidden" style={{ backgroundColor: '#f0f0f0' }}>
         {/* Top label */}
-        <div className="container-main pt-24 pb-8">
+        <div className="container-main pb-8">
           <div className="flex items-center gap-4"><div className="text-eyebrow">Expertise</div><div style={{ height: '1px', flex: 1, maxWidth: '80px', backgroundColor: '#f1e500' }} /></div>
         </div>
 
