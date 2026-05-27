@@ -71,6 +71,38 @@ export function Projects() {
             />
           ))}
         </div>
+
+        {/* View All Projects Link */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.4, ease: EASE_CINEMA }}
+          className="mt-16 flex justify-center"
+        >
+          <a
+            href="/projects"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              backgroundColor: 'var(--text-primary)',
+              color: 'var(--bg-main)',
+              padding: '0.875rem 2rem',
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.8125rem',
+              fontWeight: 600,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              transition: 'opacity 0.2s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+          >
+            View All Projects
+            <PixelArrow />
+          </a>
+        </motion.div>
       </div>
     </section>
   );

@@ -90,4 +90,23 @@ export const projects: Project[] = [
       { label: 'AI-Driven', value: 'Yes' },
     ],
   },
+  {
+    id: 'snakegame-torch',
+    caseNumber: 'CS 005',
+    title: 'Snake Game RL Agent',
+    subtitle: 'Deep Reinforcement Learning with PyTorch',
+    description: 'An AI agent trained to play the classic Snake game using Deep Q-Learning (DQN) implemented in PyTorch and Pygame.',
+    longDescription: 'Built a reinforcement learning environment for the classic Snake game using Pygame. Developed an AI agent powered by a Deep Q-Network (DQN) implemented with PyTorch that learns optimal gameplay strategies through trial and error, reward maximization, and experience replay. The agent progressively improves its score by balancing exploration and exploitation to navigate the grid and collect food without colliding with obstacles or itself.',
+    technologies: ['Python', 'PyTorch', 'Pygame', 'Reinforcement Learning'],
+    category: 'ai-ml',
+    image: '/projects/snake-game.avif',
+    github: 'https://github.com/kumar-ayan/snakegame-torch',
+    featured: false,
+    year: '2024',
+    metrics: [
+      { label: 'Algorithm', value: 'DQN' },
+      { label: 'Framework', value: 'PyTorch' },
+      { label: 'Environment', value: 'Pygame' },
+    ],
+  },
 ];
