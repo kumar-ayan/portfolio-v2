@@ -27,9 +27,12 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [onComplete]);
 
-  // Today's date — Digitalists style
-  const now = new Date();
-  const dateStr = `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${String(now.getFullYear()).slice(2)} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+  const [dateStr, setDateStr] = useState('');
+
+  useEffect(() => {
+    const now = new Date();
+    setDateStr(`${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${String(now.getFullYear()).slice(2)} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`);
+  }, []);
 
   return (
     <AnimatePresence>

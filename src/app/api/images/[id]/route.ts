@@ -8,6 +8,8 @@ import path from 'path';
 // Redis/Upstash or Vercel Edge rate limiting.
 // ========================================
 
+export const runtime = 'nodejs';
+
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT = 30;        // requests
 const RATE_WINDOW = 60_000;   // per 60 seconds
@@ -31,15 +33,7 @@ function isRateLimited(ip: string): boolean {
 // Allowed image IDs — strict allowlist
 // ========================================
 
-const IMAGE_MAP: Record<string, string> = {
-  'hero-bg': 'hero_bg_1779780754721.png',
-  'proj-1': 'project_rl_nav_1779780770349.png',
-  'proj-2': 'project_nas_1779780803333.png',
-  'proj-3': 'project_sim_real_1779780820890.png',
-};
-
-// Fallback: serve generated images from artifact brain directory
-const BRAIN_DIR = 'C:\\Users\\Ayan\\.gemini\\antigravity-ide\\brain\\206d2f4f-5426-41f1-94fb-10dcb85aaeef';
+const ALLOWED_IDS = new Set(['hero-bg', 'proj-1', 'proj-2', 'proj-3']);
 
 // ========================================
 // Input validation
@@ -83,25 +77,18 @@ export async function GET(
     return new NextResponse('Invalid image ID', { status: 400 });
   }
 
-  const filename = IMAGE_MAP[id];
-  if (!filename) {
+  if (!ALLOWED_IDS.has(id)) {
     return new NextResponse('Not found', { status: 404 });
   }
 
   // --- Resolve file path (no path traversal possible — ID is allowlisted) ---
   const publicPath = path.join(process.cwd(), 'public', `${id}.png`);
-  const brainPath = path.join(BRAIN_DIR, filename);
 
-  let filePath = '';
-  if (existsSync(publicPath)) {
-    filePath = publicPath;
-  } else if (existsSync(brainPath)) {
-    filePath = brainPath;
-  } else {
+  if (!existsSync(publicPath)) {
     return new NextResponse('Image not found', { status: 404 });
   }
 
-  const bytes = readFileSync(filePath);
+  const bytes = readFileSync(publicPath);
   return new NextResponse(bytes, {
     headers: {
       'Content-Type': 'image/png',

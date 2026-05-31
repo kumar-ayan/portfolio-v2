@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/old-link",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/custom-api/:path*",
+      "destination": "/api/:path*"
+    }
+  ]
+}

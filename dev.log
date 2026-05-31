@@ -1,0 +1,22 @@
+
+> digital-portfolio@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 16436, using available port 3001 instead.
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://10.231.5.250:3001
+✓ Ready in 669ms
+Warning: Custom Cache-Control headers detected for the following routes:
+  - /_next/static/(.*)
+
+Setting a custom Cache-Control header can break Next.js development behavior.
+⨯ Another next dev server is already running.
+
+- Local:        http://localhost:3000
+- PID:          16436
+- Dir:          D:\Portfolio v2\digital-portfolio
+- Log:          .next\dev\logs\next-development.log
+
+Run taskkill /PID 16436 /F to stop it.
+[?25h
