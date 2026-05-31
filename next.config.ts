@@ -35,8 +35,6 @@ const securityHeaders = [
       "camera=()",
       "microphone=()",
       "geolocation=()",
-      "browsing-topics=()",
-      "interest-cohort=()",
     ].join(", "),
   },
   // Force HTTPS (only meaningful in production)
@@ -62,6 +60,8 @@ const securityHeaders = [
       "connect-src 'self' https://vercel.live wss://ws-us3.pusher.com",
       // Media: self only
       "media-src 'self'",
+      // Frames: allow Vercel toolbar
+      "frame-src https://vercel.live",
       // No plugins ever
       "object-src 'none'",
       // No embedding in frames
