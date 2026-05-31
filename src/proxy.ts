@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // Runs before every request — lightweight security layer
 // ========================================
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // --- Block common scanner/bot paths ---

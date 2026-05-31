@@ -92,16 +92,7 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: securityHeaders,
       },
-      {
-        // Immutable cache for hashed JS/CSS chunks (1 year)
-        source: "/_next/static/(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
+
       {
         // Long cache for fonts (30 days, revalidatable)
         source: "/fonts/(.*)",

@@ -6,7 +6,7 @@ import { ImageResponse } from 'next/og';
 // Dimensions: 1200×630 (standard OG)
 // ========================================
 
-export const runtime = 'edge';
+
 export const alt = 'Ayan Kumar — Full Stack Developer & AI/ML Enthusiast';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
