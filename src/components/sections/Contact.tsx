@@ -30,8 +30,7 @@ export function Contact() {
             {/* Left */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: EASE_CINEMA }}
             >
               <h2
@@ -98,8 +97,7 @@ export function Contact() {
             {/* Right — form */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.15, ease: EASE_CINEMA }}
             >
               {submitted ? (
